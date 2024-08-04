@@ -9,184 +9,123 @@ USE LibreriaDB;
 
 -- Crear la tabla Categorias
 CREATE TABLE Categorias (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(255) NOT NULL
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Identificador único y auto incrementable para cada categoría
+    nombre VARCHAR(255) NOT NULL       -- Nombre de la categoría
 );
 
 -- Crear la tabla Editoriales
 CREATE TABLE Editoriales (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(255) NOT NULL,
-    pais VARCHAR(100)
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Identificador único y auto incrementable para cada editorial
+    nombre VARCHAR(255) NOT NULL,      -- Nombre de la editorial
+    pais VARCHAR(100)                  -- País de origen de la editorial
 );
 
 -- Crear la tabla Autores
 CREATE TABLE Autores (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(255) NOT NULL,
-    apellido VARCHAR(255) NOT NULL
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Identificador único y auto incrementable para cada autor
+    nombre VARCHAR(255) NOT NULL,      -- Nombre del autor
+    apellido VARCHAR(255) NOT NULL     -- Apellido del autor
 );
 
 -- Crear la tabla Libros
 CREATE TABLE Libros (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    titulo VARCHAR(255) NOT NULL,
-    id_categoria INT,
-    id_editorial INT,
-    fecha_publicacion DATE,
-    precio DECIMAL(10, 2),
-    FOREIGN KEY (id_categoria) REFERENCES Categorias(id),
-    FOREIGN KEY (id_editorial) REFERENCES Editoriales(id)
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Identificador único y auto incrementable para cada libro
+    titulo VARCHAR(255) NOT NULL,      -- Título del libro
+    id_categoria INT,                  -- Identificador de la categoría del libro
+    id_editorial INT,                  -- Identificador de la editorial del libro
+    fecha_publicacion DATE,            -- Fecha de publicación del libro
+    precio DECIMAL(10, 2),             -- Precio del libro
+    FOREIGN KEY (id_categoria) REFERENCES Categorias(id), -- Relación con la tabla Categorias
+    FOREIGN KEY (id_editorial) REFERENCES Editoriales(id) -- Relación con la tabla Editoriales
 );
 
 -- Crear la tabla Clientes
 CREATE TABLE Clientes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(255) NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    telefono VARCHAR(20)
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Identificador único y auto incrementable para cada cliente
+    nombre VARCHAR(255) NOT NULL,      -- Nombre del cliente
+    email VARCHAR(255) UNIQUE NOT NULL,-- Correo electrónico del cliente, debe ser único
+    telefono VARCHAR(20)               -- Teléfono del cliente
 );
 
 -- Crear la tabla Ventas
 CREATE TABLE Ventas (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    id_cliente INT,
-    fecha_venta DATE NOT NULL,
-    total DECIMAL(10, 2),
-    FOREIGN KEY (id_cliente) REFERENCES Clientes(id)
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Identificador único y auto incrementable para cada venta
+    id_cliente INT,                    -- Identificador del cliente que realizó la compra
+    fecha_venta DATE NOT NULL,         -- Fecha de la venta
+    total DECIMAL(10, 2),              -- Total de la venta
+    FOREIGN KEY (id_cliente) REFERENCES Clientes(id) -- Relación con la tabla Clientes
 );
 
 -- Crear la tabla intermedia Libros_Autores
 CREATE TABLE Libros_Autores (
-    id_libro INT,
-    id_autor INT,
-    PRIMARY KEY (id_libro, id_autor),
-    FOREIGN KEY (id_libro) REFERENCES Libros(id),
-    FOREIGN KEY (id_autor) REFERENCES Autores(id)
+    id_libro INT,                      -- Identificador del libro
+    id_autor INT,                      -- Identificador del autor
+    PRIMARY KEY (id_libro, id_autor),  -- Clave primaria compuesta por el id del libro y del autor
+    FOREIGN KEY (id_libro) REFERENCES Libros(id), -- Relación con la tabla Libros
+    FOREIGN KEY (id_autor) REFERENCES Autores(id) -- Relación con la tabla Autores
 );
 
 -- Crear la tabla intermedia Ventas_Libros
 CREATE TABLE Ventas_Libros (
-    id_venta INT,
-    id_libro INT,
-    cantidad INT,
-    PRIMARY KEY (id_venta, id_libro),
-    FOREIGN KEY (id_venta) REFERENCES Ventas(id),
-    FOREIGN KEY (id_libro) REFERENCES Libros(id)
+    id_venta INT,                      -- Identificador de la venta
+    id_libro INT,                      -- Identificador del libro
+    cantidad INT,                      -- Cantidad de libros vendidos
+    PRIMARY KEY (id_venta, id_libro),  -- Clave primaria compuesta por el id de la venta y del libro
+    FOREIGN KEY (id_venta) REFERENCES Ventas(id), -- Relación con la tabla Ventas
+    FOREIGN KEY (id_libro) REFERENCES Libros(id)  -- Relación con la tabla Libros
 );
 
 -- Crear la tabla RegistroVentas
 CREATE TABLE RegistroVentas (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    id_venta INT,
-    fecha_insercion DATETIME
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Identificador único y auto incrementable para cada registro
+    id_venta INT,                      -- Identificador de la venta registrada
+    fecha_insercion DATETIME           -- Fecha y hora de la inserción del registro
 );
 
--- Insertar categorías
-INSERT INTO Categorias (nombre) VALUES 
-('Ficción'), 
-('No Ficción'), 
-('Ciencia'), 
-('Historia'), 
-('Fantasía'), 
-('Biografía'), 
-('Tecnología');
+-- Crear la tabla Sucursales
+CREATE TABLE Sucursales (
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Identificador único y auto incrementable para cada sucursal
+    nombre VARCHAR(255) NOT NULL,      -- Nombre de la sucursal
+    direccion VARCHAR(255) NOT NULL,   -- Dirección de la sucursal
+    ciudad VARCHAR(100) NOT NULL,      -- Ciudad donde se encuentra la sucursal
+    pais VARCHAR(100) NOT NULL         -- País donde se encuentra la sucursal
+);
 
--- Insertar editoriales
-INSERT INTO Editoriales (nombre, pais) VALUES 
-('Editorial A', 'España'), 
-('Editorial B', 'México'), 
-('Editorial C', 'Argentina'), 
-('Editorial D', 'Colombia'), 
-('Editorial E', 'Chile');
-
--- Insertar autores
-INSERT INTO Autores (nombre, apellido) VALUES 
-('Gabriel', 'García Márquez'), 
-('Isabel', 'Allende'), 
-('Jorge', 'Luis Borges'), 
-('Mario', 'Vargas Llosa'), 
-('Julio', 'Cortázar');
-
--- Insertar libros
-INSERT INTO Libros (titulo, id_categoria, id_editorial, fecha_publicacion, precio) 
-VALUES 
-('Cien Años de Soledad', 1, 1, '1967-06-05', 19.99), 
-('La Casa de los Espíritus', 1, 2, '1982-10-20', 17.99),
-('El Aleph', 1, 3, '1949-07-15', 15.50),
-('Conversación en La Catedral', 1, 4, '1969-05-18', 22.00),
-('Rayuela', 1, 5, '1963-10-25', 18.75),
-('Ficciones', 1, 3, '1944-01-01', 14.99),
-('Crónica de una Muerte Anunciada', 1, 1, '1981-04-01', 16.00);
-
--- Insertar clientes
-INSERT INTO Clientes (nombre, email, telefono) 
-VALUES 
-('Juan Pérez', 'juan.perez@example.com', '1234567890'), 
-('María García', 'maria.garcia@example.com', '0987654321'),
-('Carlos López', 'carlos.lopez@example.com', '5551234567'),
-('Ana Torres', 'ana.torres@example.com', '5559876543'),
-('Luis González', 'luis.gonzalez@example.com', '5556789012');
-
--- Insertar ventas
-INSERT INTO Ventas (id_cliente, fecha_venta, total) 
-VALUES 
-(1, '2023-07-01', 37.98), 
-(2, '2023-07-02', 17.99),
-(3, '2023-07-03', 32.50),
-(4, '2023-07-04', 22.00),
-(5, '2023-07-05', 41.75);
-
--- Insertar libros-autores
-INSERT INTO Libros_Autores (id_libro, id_autor) 
-VALUES 
-(1, 1), 
-(2, 2),
-(3, 3),
-(4, 4),
-(5, 5),
-(6, 3),
-(7, 1);
-
--- Insertar ventas-libros
-INSERT INTO Ventas_Libros (id_venta, id_libro, cantidad) 
-VALUES 
-(1, 1, 1), 
-(1, 2, 1), 
-(2, 2, 1), 
-(3, 3, 2), 
-(4, 4, 1),
-(5, 5, 2), 
-(5, 6, 1);
+-- Crear la tabla Empleados
+CREATE TABLE Empleados (
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Identificador único y auto incrementable para cada empleado
+    nombre VARCHAR(255) NOT NULL,      -- Nombre del empleado
+    apellido VARCHAR(255) NOT NULL,    -- Apellido del empleado
+    id_sucursal INT,                   -- Identificador de la sucursal donde trabaja el empleado
+    puesto VARCHAR(255),               -- Puesto del empleado
+    FOREIGN KEY (id_sucursal) REFERENCES Sucursales(id) -- Relación con la tabla Sucursales
+);
 
 -- Crear la vista VistaLibrosPorCategoria
--- Descripción detallada: Muestra información detallada de los libros junto con sus categorías correspondientes.
--- Objetivo: Facilitar la consulta de los libros categorizados por su género, permitiendo así un acceso rápido a la información de libros por categorías.
--- Tablas que lo componen: Libros, Categorias.
 CREATE VIEW VistaLibrosPorCategoria AS
 SELECT l.id, l.titulo, c.nombre AS categoria, l.fecha_publicacion, l.precio
 FROM Libros l
 JOIN Categorias c ON l.id_categoria = c.id;
+-- Esta vista muestra la lista de libros junto con su categoría, fecha de publicación y precio.
+-- Es útil para obtener una visión general de los libros clasificados por categoría.
 
 -- Crear la vista VistaVentasPorCliente
--- Descripción detallada: Proporciona un resumen de las ventas realizadas, asociando cada venta con el cliente que la realizó.
--- Objetivo: Permitir la revisión de las ventas por cliente, facilitando la gestión y análisis de las transacciones realizadas.
--- Tablas que lo componen: Ventas, Clientes.
 CREATE VIEW VistaVentasPorCliente AS
 SELECT v.id, c.nombre AS cliente, v.fecha_venta, v.total
 FROM Ventas v
 JOIN Clientes c ON v.id_cliente = c.id;
+-- Esta vista muestra la lista de ventas junto con el nombre del cliente, la fecha de la venta y el total de la venta.
+-- Es útil para ver las ventas realizadas por cada cliente.
 
 -- Crear la vista VistaLibrosConAutores
--- Descripción detallada: Muestra una lista de libros junto con sus respectivos autores, consolidando los datos de múltiples autores por libro.
--- Objetivo: Ofrecer una vista integral que relacione los libros con sus autores, útil para consultas bibliográficas y de inventario.
--- Tablas que lo componen: Libros, Libros_Autores, Autores.
 CREATE VIEW VistaLibrosConAutores AS
 SELECT l.id, l.titulo, GROUP_CONCAT(CONCAT(a.nombre, ' ', a.apellido) SEPARATOR ', ') AS autores
 FROM Libros l
 JOIN Libros_Autores la ON l.id = la.id_libro
 JOIN Autores a ON la.id_autor = a.id
 GROUP BY l.id, l.titulo;
+-- Esta vista muestra la lista de libros junto con los nombres completos de sus autores concatenados.
+-- Es útil para obtener una visión general de los libros y sus autores.
 
 -- Eliminar funciones si ya existen
 DROP FUNCTION IF EXISTS CalcularDescuento;
@@ -196,23 +135,19 @@ DROP FUNCTION IF EXISTS ObtenerPrecioLibro;
 DELIMITER //
 
 -- Crear la función CalcularDescuento
--- Descripción detallada: Calcula el precio con descuento basado en un precio original y un porcentaje de descuento.
--- Objetivo: Facilitar la aplicación de descuentos en el sistema de ventas, mejorando la flexibilidad en la gestión de precios.
--- Tablas que manipulan: Ninguna (función aritmética).
 CREATE FUNCTION CalcularDescuento(precio DECIMAL(10, 2), porcentaje DECIMAL(5, 2)) RETURNS DECIMAL(10, 2)
 DETERMINISTIC
 BEGIN
     RETURN precio - (precio * (porcentaje / 100));
 END //
+-- Esta función calcula el precio con descuento dado un precio original y un porcentaje de descuento.
+-- Es útil para aplicar descuentos a los precios de los libros.
 
 DELIMITER ;
 
 DELIMITER //
 
 -- Crear la función TotalVentasCliente
--- Descripción detallada: Suma el total de todas las ventas realizadas por un cliente específico.
--- Objetivo: Proporcionar una forma rápida de obtener el total gastado por un cliente, útil para análisis de comportamiento de clientes y generación de reportes.
--- Tablas que manipulan: Ventas.
 CREATE FUNCTION TotalVentasCliente(cliente_id INT) RETURNS DECIMAL(10, 2)
 DETERMINISTIC
 BEGIN
@@ -220,15 +155,14 @@ BEGIN
     SELECT SUM(total) INTO total FROM Ventas WHERE id_cliente = cliente_id;
     RETURN total;
 END //
+-- Esta función calcula el total de ventas realizadas por un cliente dado su id.
+-- Es útil para obtener el monto total de ventas por cliente.
 
 DELIMITER ;
 
 DELIMITER //
 
 -- Crear la función ObtenerPrecioLibro
--- Descripción detallada: Devuelve el precio de un libro específico basado en su ID.
--- Objetivo: Facilitar la obtención del precio de un libro para operaciones que requieren conocer el costo de los productos.
--- Tablas que manipulan: Libros.
 CREATE FUNCTION ObtenerPrecioLibro(libro_id INT) RETURNS DECIMAL(10, 2)
 DETERMINISTIC
 BEGIN
@@ -236,6 +170,8 @@ BEGIN
     SELECT precio INTO precio FROM Libros WHERE id = libro_id;
     RETURN precio;
 END //
+-- Esta función obtiene el precio de un libro dado su id.
+-- Es útil para obtener el precio de un libro específico.
 
 DELIMITER ;
 
@@ -247,9 +183,6 @@ DROP PROCEDURE IF EXISTS EliminarLibro;
 DELIMITER //
 
 -- Crear el stored procedure InsertarNuevoLibro
--- Descripción detallada: Inserta un nuevo libro en la tabla Libros con la información proporcionada.
--- Objetivo: Automatizar la inserción de nuevos registros de libros, asegurando la consistencia y la integridad de los datos.
--- Tablas que lo componen: Libros.
 CREATE PROCEDURE InsertarNuevoLibro(
     IN titulo VARCHAR(255),
     IN id_categoria INT,
@@ -261,15 +194,14 @@ BEGIN
     INSERT INTO Libros (titulo, id_categoria, id_editorial, fecha_publicacion, precio)
     VALUES (titulo, id_categoria, id_editorial, fecha_publicacion, precio);
 END //
+-- Este procedimiento almacena inserta un nuevo libro en la tabla Libros con los datos proporcionados.
+-- Es útil para agregar nuevos libros a la base de datos.
 
 DELIMITER ;
 
 DELIMITER //
 
 -- Crear el stored procedure ActualizarPrecioLibro
--- Descripción detallada: Actualiza el precio de un libro específico identificado por su ID.
--- Objetivo: Permitir la modificación del precio de un libro existente, facilitando la gestión dinámica de precios en el catálogo.
--- Tablas que lo componen: Libros.
 CREATE PROCEDURE ActualizarPrecioLibro(
     IN libro_id INT,
     IN nuevo_precio DECIMAL(10, 2)
@@ -277,21 +209,22 @@ CREATE PROCEDURE ActualizarPrecioLibro(
 BEGIN
     UPDATE Libros SET precio = nuevo_precio WHERE id = libro_id;
 END //
+-- Este procedimiento almacena actualiza el precio de un libro dado su id.
+-- Es útil para modificar el precio de un libro existente.
 
 DELIMITER ;
 
 DELIMITER //
 
 -- Crear el stored procedure EliminarLibro
--- Descripción detallada: Elimina un libro de la tabla Libros basado en su ID.
--- Objetivo: Facilitar la eliminación de registros de libros, asegurando que los datos obsoletos o incorrectos sean removidos del sistema.
--- Tablas que lo componen: Libros.
 CREATE PROCEDURE EliminarLibro(
     IN libro_id INT
 )
 BEGIN
     DELETE FROM Libros WHERE id = libro_id;
 END //
+-- Este procedimiento almacena elimina un libro de la tabla Libros dado su id.
+-- Es útil para remover libros de la base de datos.
 
 DELIMITER ;
 
@@ -303,24 +236,20 @@ DROP TRIGGER IF EXISTS EvitarVentasNegativas;
 DELIMITER //
 
 -- Crear un trigger para actualizar la fecha de modificación en la tabla Libros
--- Descripción detallada: Antes de actualizar un registro en la tabla Libros, establece la fecha de publicación al momento actual.
--- Objetivo: Mantener un registro preciso de cuándo se realizaron las modificaciones en los libros, asegurando la trazabilidad de los cambios.
--- Tablas que manipulan: Libros.
 CREATE TRIGGER ActualizarFechaModificacionLibros
 BEFORE UPDATE ON Libros
 FOR EACH ROW
 BEGIN
     SET NEW.fecha_publicacion = NOW();
 END //
+-- Este trigger actualiza la fecha de publicación de un libro a la fecha y hora actuales antes de cualquier actualización.
+-- Es útil para llevar un control de cuándo se modificó por última vez un libro.
 
 DELIMITER ;
 
 DELIMITER //
 
--- Crear un trigger para registrar inserciones en la tabla Ventas
--- Descripción detallada: Después de insertar una nueva venta en la tabla Ventas, registra la inserción en la tabla RegistroVentas.
--- Objetivo: Mantener un registro histórico de todas las inserciones de ventas, facilitando el seguimiento y la auditoría de las transacciones.
--- Tablas que manipulan: Ventas, RegistroVentas.
+-- Crear un trigger para registrar inserciones en la tabla RegistroVentas
 CREATE TRIGGER RegistroInsercionesVentas
 AFTER INSERT ON Ventas
 FOR EACH ROW
@@ -328,15 +257,14 @@ BEGIN
     INSERT INTO RegistroVentas (id_venta, fecha_insercion)
     VALUES (NEW.id, NOW());
 END //
+-- Este trigger registra la inserción de una nueva venta en la tabla RegistroVentas.
+-- Es útil para llevar un registro de las ventas realizadas.
 
 DELIMITER ;
 
 DELIMITER //
 
 -- Crear un trigger para evitar ventas con total negativo
--- Descripción detallada: Antes de insertar un nuevo registro en la tabla Ventas, verifica que el total no sea negativo.
--- Objetivo: Asegurar la integridad de los datos evitando que se registren ventas con un total negativo, lo cual no es lógico en una transacción de venta.
--- Tablas que manipulan: Ventas.
 CREATE TRIGGER EvitarVentasNegativas
 BEFORE INSERT ON Ventas
 FOR EACH ROW
@@ -345,8 +273,7 @@ BEGIN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El total de la venta no puede ser negativo';
     END IF;
 END //
+-- Este trigger evita que se inserten ventas con un total negativo.
+-- Es útil para asegurar la integridad de los datos y prevenir errores lógicos.
 
 DELIMITER ;
-
--- Consultar registros en la tabla RegistroVentas para verificar el funcionamiento del trigger
-SELECT * FROM RegistroVentas;
